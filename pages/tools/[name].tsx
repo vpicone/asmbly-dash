@@ -1,13 +1,18 @@
 import { useRouter } from "next/router";
 import Head from "next/head";
-import Link from "next/link";
-import tools from "../../lib/tools.json";
+// import Link from "next/link";
+import { tools } from "../../lib/tools";
 import styles from "../../styles/DetailPage.module.css";
 
 const ToolPage = () => {
   const router = useRouter();
   console.log(router.query);
-  const { name } = tools.find((tool) => tool.name === router.query.name);
+  const tool = tools.find((tool) => tool.name === router.query.name);
+  if (!tool) {
+    return router.push("/");
+  }
+
+  const { name } = tool;
 
   return (
     <div className={styles.container}>
