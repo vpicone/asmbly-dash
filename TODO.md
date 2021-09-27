@@ -1,0 +1,5 @@
+- Return to home button
+- Email on form submission w/ nodemailer
+- include actual data re: safety and availability
+- link to classes
+- QR code to link to problem
