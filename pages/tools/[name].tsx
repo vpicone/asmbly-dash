@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import Head from "next/head";
-// import Link from "next/link";
+import Link from "next/link";
+import Error from "next/error";
 import { tools } from "../../lib/tools";
 import styles from "../../styles/DetailPage.module.css";
 
@@ -9,7 +10,7 @@ const ToolPage = () => {
   console.log(router.query);
   const tool = tools.find((tool) => tool.name === router.query.name);
   if (!tool) {
-    return router.push("/");
+    return <Error statusCode={404} />;
   }
 
   const { name } = tool;
