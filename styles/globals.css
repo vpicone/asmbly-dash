@@ -27,6 +27,7 @@ a {
 @media (prefers-color-scheme: light) {
   html {
     --background: #f4f4f4;
+    --brand: #3d9490;
     --text: #161616;
     --link: #0f62fe;
   }
