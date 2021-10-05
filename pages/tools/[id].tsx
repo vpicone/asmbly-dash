@@ -8,7 +8,7 @@ import styles from "../../styles/DetailPage.module.css";
 const ToolPage = () => {
   const router = useRouter();
   console.log(router.query);
-  const tool = tools.find((tool) => tool.name === router.query.name);
+  const tool = tools.find((tool) => tool.id === router.query.id);
   if (!tool) {
     return <Error statusCode={404} />;
   }

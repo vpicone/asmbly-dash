@@ -24,7 +24,7 @@ const Home: NextPage = () => {
         <div className={styles.grid}>
           {tools.map((tool) => {
             return (
-              <Link key={tool.id} href={`tools/${tool.name}`}>
+              <Link key={tool.id} href={`tools/${tool.id}`}>
                 <a className={styles.card}>
                   <h2>{tool.name}</h2>
                   <p>
