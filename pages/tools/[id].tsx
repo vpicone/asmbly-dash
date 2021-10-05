@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import Head from "next/head";
-import Link from "next/link";
+import Image from "next/image";
 import Error from "next/error";
 import { tools } from "../../lib/tools";
 import styles from "../../styles/DetailPage.module.css";
@@ -25,30 +25,32 @@ const ToolPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>{name}</h1>
-        <h2>Safety</h2>
-        <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Iste
-          voluptatum inventore debitis sit? Quis, totam commodi? Rem
-          consequuntur, assumenda, sunt officiis necessitatibus doloribus
-          tempora voluptatum ut a quam, odit ducimus?
-        </p>
-
+        <img
+          className={styles.image}
+          src={tool.image}
+          alt={`${tool.name} in the workshop`}
+        />
         <h2>Tips and suggestions</h2>
-        <p>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Dolor nobis
-          at, sit excepturi exercitationem nihil cupiditate accusamus temporibus
-          dolorem sapiente et ab, voluptate magnam non nesciunt quae cumque
-          fugit voluptatum.
-        </p>
+        <p>{tool.description}</p>
 
-        <h2>Report a problem</h2>
+        <h2>Safety</h2>
+        <p>{tool.safety}</p>
+
+        <h2 id="report">Report a problem</h2>
         <form className={styles.form}>
-          <label htmlFor="name">Your name</label>
-          <input name="name" type="text" />
-          <label htmlFor="when">When did the problem occur?</label>
-          <input name="when" type="date" />
-          <label htmlFor="what">What happened?</label>
-          <input name="what" type="textarea" />
+          <div className={styles.inputGroup}>
+            <label htmlFor="name">Name</label>
+            <input type="text" name="name" className={styles.inputField} />
+          </div>
+          <div className={styles.inputGroup}>
+            <label htmlFor="email">Email</label>
+            <input type="email" name="email" className={styles.inputField} />
+          </div>
+          <div className={styles.inputGroup}>
+            <label htmlFor="message">Message</label>
+            <textarea rows="5" name="message" className={styles.inputField} />
+          </div>
+          <input type="submit" />
         </form>
       </main>
     </div>

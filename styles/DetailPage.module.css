@@ -8,6 +8,17 @@
   height: 100vh;
 }
 
+.title {
+  text-align: center;
+  width: 100%;
+}
+
+.image {
+  height: auto;
+  width: 100%;
+  object-fit: cover;
+}
+
 .main {
   padding: 5rem 0;
   flex: 1;
@@ -26,5 +37,15 @@
 
 .form label {
   margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
   font-size: 14px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.form [type="submit"] {
+  margin-top: 1rem;
 }

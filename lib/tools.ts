@@ -2,6 +2,9 @@ type tools = {
   name: string;
   id: string;
   zone: string;
+  image: string;
+  description: string;
+  safety: string;
 };
 
 export const tools: tools[] = [
@@ -9,6 +12,11 @@ export const tools: tools[] = [
     name: "Sawstop 7.5HP 230V table saw ",
     id: "0001",
     zone: "Wood Shop",
+    image: "https://upload.wikimedia.org/wikipedia/commons/f/fc/SawStop.jpg",
+    description:
+      "A general-purpose blade suitable for most applications is provided by ATXHS. We understand that some users may wish to provide a more application-specific blade; if this is the case, please discuss with the Workshop Committee on getting checked out to change the blade and properly adjust the SawStop brake cartridge. Inexpert blade changes can lead to misfire of the blade brake.",
+    safety:
+      "The SawStop system is designed to reduce the risk of personal injury when using the table saw. The brake cartridge is single-use and must be replaced after engagement. It may be falsely triggered by conductive materials",
   },
   {
     name: "Powermatic Planer",

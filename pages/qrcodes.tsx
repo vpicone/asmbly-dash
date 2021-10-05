@@ -8,7 +8,7 @@ const Code: React.FC<{ id: string }> = ({ id }) => {
   useEffect(() => {
     QRCode.toCanvas(
       canvasRef.current,
-      `https://asmbly-dash.vercel.app/tools/${id}`
+      `https://asmbly-dash.vercel.app/tools/${id}#report`
     );
   }, [id]);
 
