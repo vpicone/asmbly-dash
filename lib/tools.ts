@@ -2,9 +2,9 @@ type tools = {
   name: string;
   id: string;
   zone: string;
-  image: string;
-  description: string;
-  safety: string;
+  image?: string;
+  description?: string;
+  safety?: string;
 };
 
 export const tools: tools[] = [
