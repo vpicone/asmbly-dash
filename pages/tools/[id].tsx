@@ -55,6 +55,8 @@ const ToolPage = () => {
       <main className={styles.main}>
         <h1 className={styles.title}>{name}</h1>
         <img
+          width="650"
+          height="600"
           className={styles.image}
           src={tool.image}
           alt={`${tool.name} in the workshop`}
