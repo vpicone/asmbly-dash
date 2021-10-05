@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
@@ -7,13 +8,44 @@ import styles from "../../styles/DetailPage.module.css";
 
 const ToolPage = () => {
   const router = useRouter();
-  console.log(router.query);
+  const [formName, setFormName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitted, setSubmitted] = useState(false);
   const tool = tools.find((tool) => tool.id === router.query.id);
   if (!tool) {
     return <Error statusCode={404} />;
   }
 
   const { name } = tool;
+
+  const handleSubmit = (e: any, toolName: string) => {
+    e.preventDefault();
+    console.log("Sending");
+    let data = {
+      name,
+      email,
+      message,
+      toolName,
+    };
+    fetch("/api/contact", {
+      method: "POST",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }).then((res) => {
+      console.log("Response received");
+      if (res.status === 200) {
+        console.log("Response succeeded!");
+        setSubmitted(true);
+        setFormName("");
+        setEmail("");
+        setMessage("");
+      }
+    });
+  };
 
   return (
     <div className={styles.container}>
@@ -40,17 +72,38 @@ const ToolPage = () => {
         <form className={styles.form}>
           <div className={styles.inputGroup}>
             <label htmlFor="name">Name</label>
-            <input type="text" name="name" className={styles.inputField} />
+            <input
+              onChange={(e) => {
+                setFormName(e.target.value);
+              }}
+              type="text"
+              name="name"
+              className={styles.inputField}
+            />
           </div>
           <div className={styles.inputGroup}>
             <label htmlFor="email">Email</label>
-            <input type="email" name="email" className={styles.inputField} />
+            <input
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+              type="email"
+              name="email"
+              className={styles.inputField}
+            />
           </div>
           <div className={styles.inputGroup}>
             <label htmlFor="message">Message</label>
-            <textarea rows="5" name="message" className={styles.inputField} />
+            <textarea
+              onChange={(e) => {
+                setMessage(e.target.value);
+              }}
+              rows={5}
+              name="message"
+              className={styles.inputField}
+            />
           </div>
-          <input type="submit" />
+          <input onClick={(e) => handleSubmit(e, tool.name)} type="submit" />
         </form>
       </main>
     </div>
