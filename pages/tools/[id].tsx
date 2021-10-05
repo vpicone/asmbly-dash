@@ -21,7 +21,7 @@ const ToolPage = () => {
 
   const handleSubmit = (e: any, toolName: string) => {
     e.preventDefault();
-    console.log("Sending");
+    setSubmitted(true);
     let data = {
       name,
       email,
@@ -35,16 +35,13 @@ const ToolPage = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-    }).then((res) => {
-      console.log("Response received");
-      if (res.status === 200) {
-        console.log("Response succeeded!");
-        setSubmitted(true);
-        setFormName("");
-        setEmail("");
-        setMessage("");
-      }
     });
+    setFormName("");
+    setEmail("");
+    setMessage("");
+    setTimeout(() => {
+      setSubmitted(false);
+    }, 1000);
   };
 
   return (
@@ -106,7 +103,12 @@ const ToolPage = () => {
               className={styles.inputField}
             />
           </div>
-          <input onClick={(e) => handleSubmit(e, tool.name)} type="submit" />
+          <input
+            disabled={!message}
+            onClick={(e) => handleSubmit(e, tool.name)}
+            type="submit"
+          />
+          {submitted ? <p style={{ marginLeft: "auto" }}>Thanks!</p> : null}
         </form>
       </main>
     </div>
