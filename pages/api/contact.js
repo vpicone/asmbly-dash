@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 const contact = (req, res) => {
   const mailData = {
     from: "asmblydash@gmail.com",
-    to: "asmblydash@gmail.com",
+    to: `asmblydash+${req.body.toolName}@gmail.com`,
     subject: `Problem reported: ${new Date().toLocaleString()} ${
       req.body.toolName
     }`,
