@@ -18,6 +18,7 @@ const ToolPage = () => {
   }
 
   const { name } = tool;
+  const { image = tools[0].image } = tool;
 
   const handleSubmit = (e: any, toolName: string) => {
     e.preventDefault();
