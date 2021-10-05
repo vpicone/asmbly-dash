@@ -73,6 +73,7 @@ const ToolPage = () => {
           <div className={styles.inputGroup}>
             <label htmlFor="name">Name</label>
             <input
+              value={formName}
               onChange={(e) => {
                 setFormName(e.target.value);
               }}
@@ -84,6 +85,7 @@ const ToolPage = () => {
           <div className={styles.inputGroup}>
             <label htmlFor="email">Email</label>
             <input
+              value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
@@ -95,6 +97,7 @@ const ToolPage = () => {
           <div className={styles.inputGroup}>
             <label htmlFor="message">Message</label>
             <textarea
+              value={message}
               onChange={(e) => {
                 setMessage(e.target.value);
               }}
