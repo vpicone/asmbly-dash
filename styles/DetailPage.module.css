@@ -17,6 +17,7 @@
   object-fit: cover;
   max-width: 100%;
   max-height: 600px;
+  margin-bottom: 2rem;
 }
 
 .main {
@@ -28,6 +29,10 @@
   align-items: flex-start;
   text-align: left;
   max-width: 650px;
+}
+
+.main h2 {
+  margin-bottom: 0.5rem;
 }
 
 .home {
@@ -68,6 +73,13 @@
   margin-top: 0.75rem;
   font-size: 16px;
   vertical-align: baseline;
+  background-color: var(--brand);
+  border: none;
+  border-radius: 4px;
+}
+
+.form input[disabled] {
+  cursor: not-allowed;
 }
 
 @media (max-width: 600px) {

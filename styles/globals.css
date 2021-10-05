@@ -1,7 +1,16 @@
+html {
+  --background: #262626;
+  --text: #f4f4f4;
+  --brand: #bfe5e3;
+  --link: #78a9ff;
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
+  background: var(--background);
+  color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
@@ -13,4 +22,12 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: light) {
+  html {
+    --background: #f4f4f4;
+    --text: #161616;
+    --link: #0f62fe;
+  }
 }

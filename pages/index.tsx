@@ -14,7 +14,7 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Asmbly Dash</a>
+          Welcome to <span style={{ color: "var(--brand)" }}>Asmbly Dash</span>
         </h1>
 
         <p className={styles.description}>
@@ -31,6 +31,9 @@ const Home: NextPage = () => {
                     Find in-depth safety information and instructions for{" "}
                     {tool.name}.
                   </p>
+                  <span data-zone={tool.zone} className={styles.tag}>
+                    {tool.zone}
+                  </span>
                 </a>
               </Link>
             );

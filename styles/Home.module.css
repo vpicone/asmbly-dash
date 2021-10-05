@@ -85,8 +85,8 @@
 .card:hover,
 .card:focus,
 .card:active {
-  color: #0070f3;
-  border-color: #0070f3;
+  color: var(--link);
+  border-color: var(--link);
 }
 
 .card h2 {
@@ -98,6 +98,26 @@
   margin: 0;
   font-size: 1.25rem;
   line-height: 1.5;
+}
+
+.tag {
+  margin-left: auto;
+  display: block;
+  color: white;
+  width: max-content;
+  padding: 0.25rem;
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+.tag[data-zone="Wood Shop"] {
+  background: #8b4513;
+}
+.tag[data-zone="3D Printing"] {
+  background: #6262ff;
+}
+.tag[data-zone="Metal Shop"] {
+  background: #8f8f8f;
 }
 
 .logo {
