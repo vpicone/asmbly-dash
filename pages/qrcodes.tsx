@@ -16,7 +16,6 @@ const Code: React.FC<{ id: string }> = ({ id }) => {
 };
 
 const QRCodesPage = () => {
-  console.log(tools);
   return (
     <div className={styles.container}>
       {tools.map(({ name, id }) => {

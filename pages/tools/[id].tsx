@@ -5,6 +5,7 @@ import Link from "next/link";
 import Error from "next/error";
 import { tools } from "../../lib/tools";
 import styles from "../../styles/DetailPage.module.css";
+import { RaiseHand } from "../../components/RaiseHand";
 
 const ToolPage = () => {
   const router = useRouter();
@@ -56,6 +57,7 @@ const ToolPage = () => {
       </Link>
       <main className={styles.main}>
         <h1 className={styles.title}>{name}</h1>
+        <RaiseHand tool={name} />
         <img
           width="650"
           height="600"

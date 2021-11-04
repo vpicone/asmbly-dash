@@ -11,7 +11,6 @@ const Home: NextPage = () => {
         <title>Asmbly Dashboard</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome to <span style={{ color: "var(--brand)" }}>Asmbly Dash</span>
