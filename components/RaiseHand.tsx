@@ -4,7 +4,9 @@ import useWebSocket from "react-use-websocket";
 
 export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
   const [toastId, setToastId] = useState("");
-  const { sendJsonMessage, lastJsonMessage } = useWebSocket("ws://maker:8090");
+  const { sendJsonMessage, lastJsonMessage } = useWebSocket(
+    "ws://api.asmbly.space/ws"
+  );
 
   useEffect(() => {
     if (lastJsonMessage?.data) {
@@ -33,7 +35,7 @@ export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
           );
           break;
         case "assist":
-          toast.success("Help has arrived!", {
+          toast.success("Help is on the way!", {
             id: toastId,
           });
           setToastId("");
