@@ -5,7 +5,7 @@ import useWebSocket from "react-use-websocket";
 export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
   const [toastId, setToastId] = useState("");
   const { sendJsonMessage, lastJsonMessage } = useWebSocket(
-    "ws://173.230.131.211:443/ws"
+    "wss://api.asmbly.space/ws/"
   );
 
   useEffect(() => {
