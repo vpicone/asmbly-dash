@@ -3,6 +3,8 @@ html {
   --text: #f4f4f4;
   --brand: #bfe5e3;
   --link: #78a9ff;
+  --button-background: #393939;
+  --button-background-hover: #4c4c4c;
 }
 
 html,
@@ -30,5 +32,7 @@ a {
     --brand: #3d9490;
     --text: #161616;
     --link: #0f62fe;
+    --button-background: #e0e0e0;
+    --button-background-hover: #d1d1d1;
   }
 }
