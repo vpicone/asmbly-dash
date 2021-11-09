@@ -54,6 +54,7 @@ export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
         case "assist":
           toast.success("Help is on the way!", {
             id: toastId,
+            icon: "🙏",
           });
           setToastId("");
       }
