@@ -7,6 +7,7 @@ import styles from "./RaiseHand.module.css";
 import { ChatBox, ChatMessage } from "./ChatBox";
 
 const PROD = "wss://api.asmbly.space/ws/";
+const DEV = "ws://localhost:8080/ws/";
 
 export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
   const [showChat, setShowChat] = useState(false);
@@ -14,9 +15,7 @@ export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
   const [assistId, setAssistId] = useState("");
   const [requestId, setRequestId] = useState("");
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
-  const { sendJsonMessage, lastJsonMessage } = useWebSocket(
-    "ws://localhost:8080/ws/"
-  );
+  const { sendJsonMessage, lastJsonMessage } = useWebSocket(PROD);
 
   useEffect(() => {
     if (lastJsonMessage?.data) {
