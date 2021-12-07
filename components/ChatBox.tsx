@@ -1,4 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  KeyboardEventHandler,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import styles from "./ChatBox.module.css";
 
 export type ChatMessage = {
@@ -26,16 +31,14 @@ export const ChatBox: React.FC<Props> = ({
       anchorRef.current.scrollIntoView();
     }
   }, [messages]);
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.addEventListener("keydown", (e) => {
-        if (e.key == "Enter") {
-          sendChatMessage({ message: inputValue });
-          setInputValue("");
-        }
-      });
+
+  const onKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
+    if (e.key === "Enter") {
+      sendChatMessage({ message: inputValue });
+      setInputValue("");
     }
-  }, [inputValue]);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.messageList}>
@@ -53,6 +56,7 @@ export const ChatBox: React.FC<Props> = ({
       </div>
       <div className={styles.inputWrapper}>
         <input
+          onKeyDown={onKeyDown}
           ref={inputRef}
           autoFocus
           value={inputValue}
