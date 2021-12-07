@@ -5,6 +5,10 @@ html {
   --link: #78a9ff;
   --button-background: #393939;
   --button-background-hover: #4c4c4c;
+  --danger: #fa4d56;
+  --danger-hover: #ff8389;
+  --success: #24a148;
+  --success-hover: #42be65;
 }
 
 html,

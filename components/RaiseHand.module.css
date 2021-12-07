@@ -42,6 +42,23 @@
 .actionButton {
   width: 100%;
   padding: 0.7rem 1.6rem;
+  margin: 0;
+}
+
+.actionButton.success {
+  background: var(--success);
+}
+
+.actionButton.success:hover {
+  background: var(--success-hover);
+}
+
+.actionButton.danger {
+  background: var(--danger);
+}
+
+.actionButton.danger:hover {
+  background: var(--danger-hover);
 }
 
 .raiseHandButton {
@@ -58,5 +75,5 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: 12px;
 }

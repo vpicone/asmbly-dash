@@ -1,132 +1,304 @@
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import useWebSocket from "react-use-websocket";
+import cx from "classnames";
 import styles from "./RaiseHand.module.css";
 
+import { ChatBox } from "./ChatBox";
+
+const PROD = "wss://api.asmbly.space/ws/";
 export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
-  const [toastId, setToastId] = useState("");
-  const { sendJsonMessage, lastJsonMessage } = useWebSocket(
-    "wss://api.asmbly.space/ws/"
+  const [myUniqueId, setMyUniqueId] = useState("");
+  const [assistId, setAssistId] = useState("");
+  const [requestId, setRequestId] = useState("");
+  const { sendJsonMessage, lastJsonMessage, getWebSocket } = useWebSocket(
+    "ws://localhost:8080/ws/"
   );
 
   useEffect(() => {
     if (lastJsonMessage?.data) {
       switch (lastJsonMessage.data.action) {
+        case "connection":
+          setMyUniqueId(lastJsonMessage.data.uid);
+          break;
+        case "chat":
+          console.log(lastJsonMessage.data.payload);
+          break;
+        case "endRequest":
+          if (lastJsonMessage.data.payload.requestId === assistId) {
+            const { resolution } = lastJsonMessage.data.payload;
+            toast(
+              `The requestor has ${
+                resolution === "canceled"
+                  ? "canceled their request"
+                  : "marked their request as resolved!"
+              }`,
+              { icon: resolution === "canceled" ? "🛑" : "🥳" }
+            );
+            setAssistId("");
+          }
+          break;
         case "request":
-          toast(
-            (t) => (
-              <>
-                <div
-                  style={{
-                    marginRight: "2rem",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  Help has been requested at the{" "}
-                  {lastJsonMessage.data.payload.tool}
-                </div>
-                <div className={styles.toastActions}>
-                  <button
-                    className={styles.toastButton}
-                    onClick={() => toast.dismiss(t.id)}
-                  >
-                    Dismiss
-                  </button>
-                  <button
-                    className={`${styles.toastButton} ${styles.helpButton}`}
-                    onClick={() => {
-                      offerHelp(lastJsonMessage.data.payload.requestId);
-                      toast.success(
-                        `Thank you! Rendezvous at the ${lastJsonMessage.data.payload.tool} station.`,
-                        { id: t.id, icon: "👏" }
-                      );
+          if (lastJsonMessage.data.payload.requestId === myUniqueId) {
+            // someone is triggering a request on my behalf, they were likely helping but had to cancel
+            requestHelp({ firstRequest: false });
+          } else {
+            toast(
+              (t) => (
+                <>
+                  <div
+                    style={{
+                      marginRight: "2rem",
+                      display: "flex",
+                      alignItems: "center",
                     }}
                   >
-                    Help
-                  </button>
-                </div>
-              </>
-            ),
-            { duration: 5000, style: { maxWidth: "800px" } }
-          );
+                    Help has been requested at the{" "}
+                    {lastJsonMessage.data.payload.tool}
+                  </div>
+                  <div className={styles.toastActions}>
+                    <button
+                      className={styles.toastButton}
+                      onClick={() =>
+                        toast.dismiss(lastJsonMessage.data.payload.requestId)
+                      }
+                    >
+                      Dismiss
+                    </button>
+                    <button
+                      className={`${styles.toastButton} ${styles.helpButton}`}
+                      onClick={() => {
+                        toast.dismiss();
+                        toast.success(
+                          `Thank you! Rendezvous at the ${lastJsonMessage.data.payload.tool} station.`,
+                          {
+                            icon: "👏",
+                          }
+                        );
+                        offerHelp(lastJsonMessage.data.payload);
+                      }}
+                    >
+                      Help
+                    </button>
+                  </div>
+                </>
+              ),
+              {
+                id: lastJsonMessage.data.payload.requestId,
+              }
+            );
+          }
           break;
         case "assist":
-          toast.success("Help is on the way!", {
-            id: toastId,
-            icon: "🙏",
-          });
-          setToastId("");
+          if (lastJsonMessage.data.payload.requestId === myUniqueId) {
+            toast.success("Help is on the way!", {
+              id: lastJsonMessage.data.payload.requestId,
+              icon: "🙏",
+            });
+            setAssistId(lastJsonMessage.data.payload.assistId);
+          } else if (
+            lastJsonMessage.data.payload.assistId !== myUniqueId &&
+            lastJsonMessage.data.payload.excludeId !== myUniqueId
+          ) {
+            toast(
+              (t) => (
+                <>
+                  <div
+                    style={{
+                      marginRight: "2rem",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    Help has been requested at the{" "}
+                    {lastJsonMessage.data.payload.tool}
+                  </div>
+                  <div className={styles.toastActions}>
+                    <button
+                      className={styles.toastButton}
+                      onClick={() => toast.dismiss(t.id)}
+                    >
+                      Dismiss
+                    </button>
+                    <button
+                      className={`${styles.toastButton} ${styles.helpButton}`}
+                      onClick={() => {
+                        toast.success(
+                          `Thank you for offering! However, this request has already been fulfilled`,
+                          {
+                            id: t.id,
+                            icon: "👏",
+                          }
+                        );
+                      }}
+                    >
+                      Help
+                    </button>
+                  </div>
+                </>
+              ),
+              {
+                id: lastJsonMessage.data.payload.requestId,
+              }
+            );
+          }
       }
     }
   }, [lastJsonMessage]);
 
-  const offerHelp = (requestId: string) => {
+  const offerHelp = (request: any) => {
     sendJsonMessage({
       data: {
         payload: {
-          requestId,
+          assistId: myUniqueId,
+          ...request,
         },
         action: "assist",
       },
     });
+    setAssistId(request.requestId);
   };
 
-  const requestHelp = () => {
+  const requestHelp = ({ firstRequest = true }) => {
     sendJsonMessage({
       data: {
         payload: {
           tool,
+          excludeId: assistId,
+          requestId: myUniqueId,
         },
         action: "request",
       },
     });
-    setToastId(toast.loading("Your hand has been raised!"));
+    setAssistId("");
+    setRequestId(
+      toast.loading(
+        `${
+          firstRequest
+            ? "Your hand has been raised!"
+            : "Your hand has been re-raised."
+        }`,
+        { id: myUniqueId }
+      )
+    );
   };
 
-  const isRequesting = toastId !== "";
+  const endRequest = ({
+    resolution,
+  }: {
+    resolution: "canceled" | "resolved";
+  }) => {
+    sendJsonMessage({
+      data: {
+        payload: {
+          resolution,
+          requestId: myUniqueId,
+        },
+        action: "endRequest",
+      },
+    });
+    setRequestId("");
+    setAssistId("");
+  };
+
+  const sendChatMessage = ({
+    to = assistId,
+    from = myUniqueId,
+    message,
+  }: {
+    to?: string;
+    from?: string;
+    message: string;
+  }) => {
+    sendJsonMessage({
+      data: {
+        payload: {
+          to,
+          message,
+          from,
+        },
+        action: "chat",
+      },
+    });
+  };
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.controlBar}>
-        {isRequesting ? (
+        {assistId || requestId ? (
           <>
-            <button
-              className={styles.actionButton}
-              onClick={() => {
-                toast.success("Request resolved!", { id: toastId });
-                setToastId("");
-              }}
-            >
-              Resolve
-            </button>
-            <button
-              className={styles.actionButton}
-              onClick={() => {
-                toast("Request for help canceled", { id: toastId });
-                setToastId("");
-              }}
-            >
-              Cancel
-            </button>
+            {requestId ? (
+              <>
+                <button
+                  className={cx(styles.actionButton, styles.success)}
+                  onClick={() => {
+                    toast.success("Request resolved!", { id: requestId });
+                    endRequest({ resolution: "resolved" });
+                  }}
+                >
+                  Resolve
+                </button>
+                <button
+                  className={cx(styles.actionButton, styles.danger)}
+                  onClick={() => {
+                    toast("Request for help canceled.", { id: requestId });
+                    endRequest({ resolution: "canceled" });
+                  }}
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <button
+                className={cx(styles.actionButton, styles.danger)}
+                onClick={() => {
+                  toast.dismiss();
+                  toast("You are no longer assisting.");
+                  // Send a new request for the individual you were assisting
+                  sendJsonMessage({
+                    data: {
+                      payload: {
+                        requestId: assistId,
+                      },
+                      action: "request",
+                    },
+                  });
+                  setAssistId("");
+                }}
+              >
+                Cancel
+              </button>
+            )}
           </>
         ) : (
           <>
             <button
               id="request-help"
               className={styles.raiseHandButton}
-              onClick={requestHelp}
+              onClick={() => requestHelp({ firstRequest: true })}
             >
               <HighFive />
             </button>
             <label htmlFor="request-help">Request help</label>
           </>
         )}
+        {/* send chat */}
       </div>
-      <Toaster />
+      <Toaster toastOptions={{ style: { maxWidth: "80vw" }, duration: 4000 }} />
+      {/* ChatBox */}
+      {/* <ChatBox /> */}
     </div>
   );
 };
+
+// {assistId && (
+//     <button
+//       className={styles.actionButton}
+//       onClick={() => sendChatMessage({ message: "Hello there" })}
+//     >
+//       Send chat
+//     </button>
+//   )}
 
 const HighFive = () => (
   <svg

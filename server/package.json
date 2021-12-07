@@ -1,0 +1,15 @@
+{
+  "name": "asbly-dash-mesh",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "authbind --deep pm2 start index.js --watch"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "nanoid": "^3.1.30",
+    "ws": "^8.2.3"
+  }
+}

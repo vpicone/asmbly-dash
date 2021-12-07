@@ -1,0 +1,25 @@
+.container {
+  max-width: 400px;
+  max-height: 350px;
+  overflow-y: scroll;
+  background: white;
+  padding: 1rem;
+}
+
+.messageList {
+  all: unset;
+  display: flex;
+  flex-direction: column;
+}
+
+.messageList li {
+  background: red;
+  align-self: flex-start;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+.messageList .me {
+  background: blue;
+  align-self: flex-end;
+}
