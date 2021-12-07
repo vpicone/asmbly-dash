@@ -1,33 +1,77 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./ChatBox.module.css";
 
-export const ChatBox: React.FC = () => {
+export type ChatMessage = {
+  to: string;
+  from: string;
+  message: string;
+};
+
+type Props = {
+  messages: ChatMessage[];
+  myUniqueId: string;
+  sendChatMessage: ({ message }: { message: string }) => void;
+};
+
+export const ChatBox: React.FC<Props> = ({
+  messages,
+  myUniqueId,
+  sendChatMessage,
+}) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [inputValue, setInputValue] = useState("");
+  const anchorRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (anchorRef.current) {
+      anchorRef.current.scrollIntoView();
+    }
+  }, [messages]);
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.addEventListener("keydown", (e) => {
+        if (e.key == "Enter") {
+          sendChatMessage({ message: inputValue });
+          setInputValue("");
+        }
+      });
+    }
+  }, [inputValue]);
   return (
     <div className={styles.container}>
-      <ul className={styles.messageList}>
-        <li className={styles.me}>Hell there! this is a message from me</li>
-        <li>Hell there! this is a response from them</li>
-        <li>This is another response</li>
-        <li className={styles.me}>A short one from me</li>
-        <li className={styles.me}>Then a long one me</li>
-        <li className={styles.me}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo
-          assumenda incidunt magnam perspiciatis ipsum, iure corrupti quaerat
-          tempora nihil quidem impedit est reprehenderit ducimus hic consectetur
-          ea placeat itaque cum!
-        </li>
-        <li className={styles.me}>Hell there! this is a message from me</li>
-        <li>Hell there! this is a response from them</li>
-        <li>This is another response</li>
-        <li className={styles.me}>A short one from me</li>
-        <li className={styles.me}>Then a long one me</li>
-        <li className={styles.me}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo
-          assumenda incidunt magnam perspiciatis ipsum, iure corrupti quaerat
-          tempora nihil quidem impedit est reprehenderit ducimus hic consectetur
-          ea placeat itaque cum!
-        </li>
-      </ul>
+      <div className={styles.messageList}>
+        {messages.map(({ from, message }, i) => {
+          return (
+            <span
+              key={`${message}-${i}`}
+              className={from === myUniqueId ? styles.me : styles.them}
+            >
+              {message}
+            </span>
+          );
+        })}
+        <div ref={anchorRef} />
+      </div>
+      <div className={styles.inputWrapper}>
+        <input
+          ref={inputRef}
+          autoFocus
+          value={inputValue}
+          placeholder="Aa"
+          onChange={(e) => setInputValue(e.target.value)}
+          className={styles.input}
+          type="text"
+        />
+        <button
+          disabled={inputValue.length === 0}
+          onClick={() => {
+            sendChatMessage({ message: inputValue });
+            setInputValue("");
+          }}
+          className={styles.send}
+        >
+          Send
+        </button>
+      </div>
     </div>
   );
 };

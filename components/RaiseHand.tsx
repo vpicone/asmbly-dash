@@ -4,14 +4,17 @@ import useWebSocket from "react-use-websocket";
 import cx from "classnames";
 import styles from "./RaiseHand.module.css";
 
-import { ChatBox } from "./ChatBox";
+import { ChatBox, ChatMessage } from "./ChatBox";
 
 const PROD = "wss://api.asmbly.space/ws/";
+
 export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
+  const [showChat, setShowChat] = useState(false);
   const [myUniqueId, setMyUniqueId] = useState("");
   const [assistId, setAssistId] = useState("");
   const [requestId, setRequestId] = useState("");
-  const { sendJsonMessage, lastJsonMessage, getWebSocket } = useWebSocket(
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const { sendJsonMessage, lastJsonMessage } = useWebSocket(
     "ws://localhost:8080/ws/"
   );
 
@@ -22,7 +25,7 @@ export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
           setMyUniqueId(lastJsonMessage.data.uid);
           break;
         case "chat":
-          console.log(lastJsonMessage.data.payload);
+          setChatMessages([...chatMessages, lastJsonMessage.data.payload]);
           break;
         case "endRequest":
           if (lastJsonMessage.data.payload.requestId === assistId) {
@@ -36,13 +39,15 @@ export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
               { icon: resolution === "canceled" ? "🛑" : "🥳" }
             );
             setAssistId("");
+            setChatMessages([]);
+            setShowChat(false);
           }
           break;
         case "request":
           if (lastJsonMessage.data.payload.requestId === myUniqueId) {
             // someone is triggering a request on my behalf, they were likely helping but had to cancel
             requestHelp({ firstRequest: false });
-          } else {
+          } else if (!requestId && !assistId) {
             toast(
               (t) => (
                 <>
@@ -199,29 +204,29 @@ export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
     });
     setRequestId("");
     setAssistId("");
+    setChatMessages([]);
+    setShowChat(false);
   };
 
-  const sendChatMessage = ({
-    to = assistId,
-    from = myUniqueId,
-    message,
-  }: {
-    to?: string;
-    from?: string;
-    message: string;
-  }) => {
+  const sendChatMessage = ({ message }: { message: string }) => {
+    const payload = {
+      to: assistId,
+      from: myUniqueId,
+      message,
+    };
+    setChatMessages([...chatMessages, payload]);
     sendJsonMessage({
       data: {
-        payload: {
-          to,
-          message,
-          from,
-        },
+        payload,
         action: "chat",
       },
     });
   };
 
+  //   Show chat after first message received
+  if (!showChat && chatMessages.length === 1) {
+    setShowChat(true);
+  }
   return (
     <div className={styles.wrapper}>
       <div className={styles.controlBar}>
@@ -282,23 +287,26 @@ export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
             <label htmlFor="request-help">Request help</label>
           </>
         )}
-        {/* send chat */}
+        {assistId && (
+          <button
+            className={styles.actionButton}
+            onClick={() => setShowChat(!showChat)}
+          >
+            {`${showChat ? "Hide" : "Show"} chat`}
+          </button>
+        )}
       </div>
-      <Toaster toastOptions={{ style: { maxWidth: "80vw" }, duration: 4000 }} />
-      {/* ChatBox */}
-      {/* <ChatBox /> */}
+      <Toaster toastOptions={{ style: { maxWidth: "80vw" } }} />
+      {showChat && (
+        <ChatBox
+          sendChatMessage={sendChatMessage}
+          myUniqueId={myUniqueId}
+          messages={chatMessages}
+        />
+      )}
     </div>
   );
 };
-
-// {assistId && (
-//     <button
-//       className={styles.actionButton}
-//       onClick={() => sendChatMessage({ message: "Hello there" })}
-//     >
-//       Send chat
-//     </button>
-//   )}
 
 const HighFive = () => (
   <svg

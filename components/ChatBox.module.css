@@ -1,25 +1,106 @@
 .container {
-  max-width: 400px;
-  max-height: 350px;
-  overflow-y: scroll;
-  background: white;
-  padding: 1rem;
+  position: fixed;
+  bottom: 0;
+  right: 1rem;
+
+  box-shadow: 0 1px 1px rgba(14.9, 14.9, 14.9, 0.2),
+    0 2px 2px rgba(14.9, 14.9, 14.9, 0.2), 0 4px 4px rgba(14.9, 14.9, 14.9, 0.2),
+    0 8px 8px rgba(14.9, 14.9, 14.9, 0.2),
+    0 16px 16px rgba(14.9, 14.9, 14.9, 0.2);
 }
 
 .messageList {
-  all: unset;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background: var(--layer-01);
+  scrollbar-width: thin;
+  padding: 0.5rem 1rem 1rem 1rem;
+  width: 100%;
+  max-width: 325px;
+  max-height: 325px;
+  min-height: 250px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 0;
   display: flex;
   flex-direction: column;
 }
 
-.messageList li {
-  background: red;
+.messageList::-webkit-scrollbar {
+  width: 12px;
+  background: var(--layer-01); /* color of the tracking area */
+}
+.messageList::-webkit-scrollbar-thumb {
+  background: var(--layer-02);
+  border-radius: 14px;
+}
+
+.messageList span {
+  padding: 0.5rem;
+  font-size: 16px;
+  background: var(--layer-02);
   align-self: flex-start;
-  border-radius: 4px;
-  margin-top: 1rem;
+  border-radius: 14px;
+  margin-top: 0.8rem;
+  max-width: 80%;
+}
+
+.them + .them,
+.me + .me {
+  margin-top: 0.2rem;
 }
 
 .messageList .me {
-  background: blue;
+  border-bottom-right-radius: 3px;
+  background: var(--brand);
+  color: var(--background);
   align-self: flex-end;
+}
+
+.messageList .them {
+  border-bottom-left-radius: 3px;
+}
+
+.inputWrapper {
+  display: flex;
+  padding: 0.75rem;
+  padding-right: 0;
+  background: var(--layer-01);
+}
+
+.input {
+  background: var(--layer-02);
+  outline-color: var(--brand);
+  border-radius: 14px;
+  flex-grow: 1;
+  border: none;
+  margin: 0;
+  font-size: 14px;
+  padding: 6px 12px;
+  color: var(--text);
+  font-size: 1rem;
+  border: 2px solid transparent;
+}
+
+.input:focus {
+  border: 2px solid var(--brand);
+  outline: none;
+}
+
+.container .send {
+  transition: color 0.3s ease;
+  padding: 0.5rem 0.8rem;
+  margin: 0 0.75rem;
+  font-size: 1rem;
+  outline-color: var(--brand);
+}
+
+.send:disabled {
+  color: #6f6f6f;
+  cursor: not-allowed;
+}
+
+.send:disabled:hover {
+  background: transparent;
+  cursor: not-allowed;
 }

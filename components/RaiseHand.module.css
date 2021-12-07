@@ -1,5 +1,5 @@
 .wrapper {
-  position: absolute;
+  position: fixed;
   top: 1rem;
   right: 1rem;
 }
@@ -40,7 +40,7 @@
 }
 
 .actionButton {
-  width: 100%;
+  width: 120px;
   padding: 0.7rem 1.6rem;
   margin: 0;
 }
