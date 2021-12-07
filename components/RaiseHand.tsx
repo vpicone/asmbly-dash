@@ -11,6 +11,7 @@ const DEV = "ws://localhost:8080/ws/";
 
 export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
   const [showChat, setShowChat] = useState(false);
+  const [autoOpenedChat, setAutoOpenedChat] = useState(false);
   const [myUniqueId, setMyUniqueId] = useState("");
   const [assistId, setAssistId] = useState("");
   const [requestId, setRequestId] = useState("");
@@ -39,6 +40,7 @@ export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
             );
             setAssistId("");
             setChatMessages([]);
+            setAutoOpenedChat(false);
             setShowChat(false);
           }
           break;
@@ -204,6 +206,7 @@ export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
     setRequestId("");
     setAssistId("");
     setChatMessages([]);
+    setAutoOpenedChat(false);
     setShowChat(false);
   };
 
@@ -222,10 +225,12 @@ export const RaiseHand: React.FC<{ tool: string }> = ({ tool }) => {
     });
   };
 
-  //   Show chat after first message received
-  if (!showChat && chatMessages.length === 1) {
+  // Only auto-open the chat once, then respect their choice
+  if (!showChat && chatMessages.length >= 1 && !autoOpenedChat) {
     setShowChat(true);
+    setAutoOpenedChat(true);
   }
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.controlBar}>
